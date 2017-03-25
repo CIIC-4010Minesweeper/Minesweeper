@@ -83,6 +83,7 @@ public class MyPanel extends JPanel {
 		}
 	}
 	
+	// Places the mines in the field
 	public void placeMines() {
 		int minesPlaced = 0; 
 		while (minesPlaced <= mines) {
@@ -95,6 +96,7 @@ public class MyPanel extends JPanel {
 		}			
 	}
 	
+	// Checks whether this place in the field has a bomb (1) or not (0).
 	public int mineCheck(int x, int y) {
 		if (!(x == -1 || y == -1)) {
 			if (minefield[x][y] == '*') {
@@ -109,7 +111,7 @@ public class MyPanel extends JPanel {
 		}
 	}
 	
-	
+	// Checks for mines on the 8 other tiles around the target location and returns the number of mines there are. 
 	public int minesAround(int x, int y) {
 		int mines = 0;
 		mines += mineCheck(x-1, y-1);

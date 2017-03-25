@@ -19,7 +19,7 @@ public class Main {
 			for (int j=0; j<9; j++) {
 				myPanel.mineCheck(i, j);
 				if (myPanel.mineCheck(i, j) == 1) {
-					System.out.println(i + "," + j);
+					System.out.println(i + "," + j); // for debugging purposes, prints the locations of bombs
 				}
 			}
 		}
