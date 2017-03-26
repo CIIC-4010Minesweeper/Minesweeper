@@ -1,6 +1,10 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Insets;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -16,7 +20,7 @@ public class MyPanel extends JPanel {
 	public int y = -1;
 	public int mouseDownGridX = 0;
 	public int mouseDownGridY = 0;
-	private char minefield[][];
+	private static char minefield[][];
 	public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
 	public MyPanel() {   //This is the constructor... this code runs first to initialize
 		if (INNER_CELL_SIZE + (new Random()).nextInt(1) < 1) {	//Use of "random" to prevent unwanted Eclipse warning
@@ -43,7 +47,9 @@ public class MyPanel extends JPanel {
 	}
 	
 	Random rando = new Random();
-	private int mines = 10;
+	public static int mines = 10;
+	public int flags = 10;
+	public static int flagged = 0;
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -85,16 +91,25 @@ public class MyPanel extends JPanel {
 	
 	// Places the mines in the field
 	public void placeMines() {
-		int minesPlaced = 0; 
+		int minesPlaced = 1; 
 		while (minesPlaced <= mines) {
 			int x = rando.nextInt(TOTAL_COLUMNS);
-			int y = rando.nextInt(TOTAL_ROWS);
+			int y = rando.nextInt(TOTAL_ROWS-1);
 			if (minefield[x][y] != '*') {
 				minefield[x][y] = '*';
 				minesPlaced++;
 			}
-		}			
+		}
+		for (int i=0; i<9; i++) {
+			for (int j=0; j<9; j++) {
+				mineCheck(i, j);
+				if (mineCheck(i, j) == 1) {
+					System.out.println(i + "," + j);
+				}
+			}
+		}repaint();
 	}
+	
 	
 	// Checks whether this place in the field has a bomb (1) or not (0).
 	public int mineCheck(int x, int y) {
@@ -103,6 +118,7 @@ public class MyPanel extends JPanel {
 				return 1;
 			}
 			else {
+				minefield[x][y] = 'c';
 				return 0;
 			}
 		}
@@ -129,6 +145,31 @@ public class MyPanel extends JPanel {
 			return 0;
 		}
 	}
+		
+	public int checkflag(int x, int y){
+		int status = 0;
+		if (!(x == -1 || y == -1)) {
+			if (colorArray[x][y] == Color.RED) {
+				status += 1;
+			}else {
+				status += 0;
+			}
+		}
+		return status;
+	}
+	
+	public void reset() {
+		for (int i = 0; i < TOTAL_COLUMNS; i++) {
+			for (int j = 0 ;j < TOTAL_ROWS; j++) {
+				colorArray[i][j] = Color.LIGHT_GRAY;
+				minefield[i][j] = ' ';
+				MyMouseAdapter.f = 1;
+				repaint();
+			}
+		}
+		placeMines();
+	}
+
 	
 	public int getGridX(int x, int y) {
 		Insets myInsets = getInsets();
