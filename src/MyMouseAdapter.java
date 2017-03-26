@@ -99,12 +99,12 @@ public class MyMouseAdapter extends MouseAdapter {
 						//Released the mouse button on the same cell where it was pressed
 						if (!(myPanel.mouseDownGridX == -1) || (myPanel.mouseDownGridY == -1)) {
 							if (!(myPanel.colorArray[gridX][gridY] == Color.RED)) {
-	 							if (myPanel.mineCheck(gridX, gridY) == 0) {
-	 								myPanel.colorArray[gridX][gridY] = Color.WHITE ;
-	 								myPanel.repaint();
+	 							if (myPanel.bombCheck(gridX, gridY) == 0) {
+	 								myPanel.checkAround(gridX, gridY);
 	 							}
 	 							else{
 	 								myPanel.colorArray[gridX][gridY] = Color.BLACK ;
+	 								myPanel.reset();
 	 								myPanel.repaint();
 	 							}
  							}
@@ -148,7 +148,7 @@ public class MyMouseAdapter extends MouseAdapter {
 						if (!(myPanel1.colorArray[gridX1][gridY1] == Color.WHITE)) {
 							if (myPanel1.checkflag(gridX1, gridY1) == 0) {
 								if (!(f > flags)) {
-									if (myPanel1.mineCheck(gridX1, gridY1) == 1) {
+									if (myPanel1.bombCheck(gridX1, gridY1) == 1) {
 										MyPanel.flagged ++;
 										if (MyPanel.flagged == 10) {
 											myPanel1.reset();

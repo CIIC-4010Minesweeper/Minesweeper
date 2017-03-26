@@ -1,10 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Insets;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -102,17 +98,21 @@ public class MyPanel extends JPanel {
 		}
 		for (int i=0; i<9; i++) {
 			for (int j=0; j<9; j++) {
-				mineCheck(i, j);
-				if (mineCheck(i, j) == 1) {
+				bombCheck(i, j);
+				if (bombCheck(i, j) == 1) {
 					System.out.println(i + "," + j);
 				}
 			}
 		}repaint();
 	}
 	
+	public void check (int x, int y) {
+		colorArray[x][y] = Color.WHITE ;
+		repaint();
+	}
 	
 	// Checks whether this place in the field has a bomb (1) or not (0).
-	public int mineCheck(int x, int y) {
+	public int bombCheck(int x, int y) {
 		if (!(x == -1 || y == -1)) {
 			if (minefield[x][y] == '*') {
 				return 1;
@@ -130,14 +130,14 @@ public class MyPanel extends JPanel {
 	// Checks for mines on the 8 other tiles around the target location and returns the number of mines there are. 
 	public int minesAround(int x, int y) {
 		int mines = 0;
-		mines += mineCheck(x-1, y-1);
-		mines += mineCheck(x-1, y);
-		mines += mineCheck(x-1, y+1);
-		mines += mineCheck(x, y-1);
-		mines += mineCheck(x, y+1);
-		mines += mineCheck(x+1, y-1);
-		mines += mineCheck(x+1, y);
-		mines += mineCheck(x+1, y+1);
+		mines += bombCheck(x-1, y-1);
+		mines += bombCheck(x-1, y);
+		mines += bombCheck(x-1, y+1);
+		mines += bombCheck(x, y-1);
+		mines += bombCheck(x, y+1);
+		mines += bombCheck(x+1, y-1);
+		mines += bombCheck(x+1, y);
+		mines += bombCheck(x+1, y+1);
 		if (mines > 0) {
 			return mines;
 		}
@@ -146,6 +146,25 @@ public class MyPanel extends JPanel {
 		}
 	}
 		
+	public void checkAround(int x, int y) {
+		int minx, miny, maxx, maxy;
+		check(x,y);
+		minx = (x <= 0 ? 0 : x - 1);
+		miny = (y <= 0 ? 0 : y - 1);
+		maxx = (x >= TOTAL_COLUMNS - 2 ? TOTAL_COLUMNS : x + 1);
+		maxy = (y >= TOTAL_ROWS - 2 ? TOTAL_ROWS : y + 1);
+		for (int i = minx; i < maxx; i ++) {
+			for (int j = miny; j <= maxy; j ++) {
+					if (bombCheck(i,j) == 0 && colorArray[i][j] != Color.WHITE) {
+						check(i,j);
+						if (minesAround(i,j) == 0) {
+							checkAround(i,j);
+						}
+					}
+				}
+			}
+		}
+	
 	public int checkflag(int x, int y){
 		int status = 0;
 		if (!(x == -1 || y == -1)) {
