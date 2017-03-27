@@ -181,7 +181,7 @@ public class MyPanel extends JPanel {
 		for (int i = 0; i < TOTAL_COLUMNS; i++) {
 			for (int j = 0 ;j < TOTAL_ROWS; j++) {
 				colorArray[i][j] = Color.LIGHT_GRAY;
-				minefield[i][j] = ' ';
+ 				minefield[i][j] = ' ';
 				MyMouseAdapter.f = 1;
 				repaint();
 			}
