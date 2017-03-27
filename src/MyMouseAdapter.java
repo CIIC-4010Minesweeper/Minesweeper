@@ -152,6 +152,8 @@ public class MyMouseAdapter extends MouseAdapter {
 										MyPanel.flagged ++;
 										if (MyPanel.flagged == 10) {
 											myPanel1.reset();
+											myPanel1.colorArray[gridX1][gridY1] = Color.LIGHT_GRAY ;
+											myPanel1.repaint();
 										}
 									}
 									myPanel1.colorArray[gridX1][gridY1] = Color.RED ;

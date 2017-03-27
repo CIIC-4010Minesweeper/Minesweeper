@@ -151,8 +151,8 @@ public class MyPanel extends JPanel {
 		check(x,y);
 		minx = (x <= 0 ? 0 : x - 1);
 		miny = (y <= 0 ? 0 : y - 1);
-		maxx = (x >= TOTAL_COLUMNS - 2 ? TOTAL_COLUMNS : x + 1);
-		maxy = (y >= TOTAL_ROWS - 2 ? TOTAL_ROWS : y + 1);
+		maxx = (x >= TOTAL_COLUMNS - 1 ? TOTAL_COLUMNS - 1 : x + 1);
+		maxy = (y >= TOTAL_ROWS - 2 ? TOTAL_ROWS - 2 : y + 1);
 		for (int i = minx; i < maxx; i ++) {
 			for (int j = miny; j <= maxy; j ++) {
 					if (bombCheck(i,j) == 0 && colorArray[i][j] != Color.WHITE) {
