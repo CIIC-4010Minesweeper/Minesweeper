@@ -20,7 +20,6 @@ public class MyPanel extends JPanel {
 	public int y = -1;
 	public int mouseDownGridX = 0;
 	public int mouseDownGridY = 0;
-	private ImageIcon icon;
 	private static char minefield[][];
 	public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
 	public MyPanel() {   //This is the constructor... this code runs first to initialize
@@ -48,6 +47,7 @@ public class MyPanel extends JPanel {
 	}
 	
 	Random rando = new Random();
+	public int unrevealed = 81;
 	public static int mines = 10;
 	public int flags = 10;
 	public static int flagged = 0;
@@ -80,6 +80,9 @@ public class MyPanel extends JPanel {
 			g.drawLine(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)), y1 + GRID_Y, x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)), y1 + GRID_Y + ((INNER_CELL_SIZE + 1) * (TOTAL_ROWS - 1)));
 		}
 		
+		Font f = new Font("Dialog", Font.PLAIN, 12); // choose a font for the numbers
+		g.setFont(f);
+		
 		//Paint cell colors
 		for (int x = 0; x < TOTAL_COLUMNS; x++) {
 			for (int y = 0; y < TOTAL_ROWS; y++) {
@@ -88,11 +91,13 @@ public class MyPanel extends JPanel {
 					g.setColor(c);
 					g.fillRect(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, INNER_CELL_SIZE, INNER_CELL_SIZE);
 				}
+				if (x == 0 && y == 9) {
+					g.setFont(f);
+					g.setColor(Color.BLACK);
+					g.drawString("reset",x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y+(y*(INNER_CELL_SIZE+1)+20));
+				}
 			}
 		}
-		
-		Font f = new Font("Dialog", Font.PLAIN, 12); // choose a font for the numbers
-		g.setFont(f);
 
 		// Draw cell numbers
 		for (int x = 0; x < TOTAL_COLUMNS; x++) {
@@ -224,6 +229,7 @@ public class MyPanel extends JPanel {
 				colorArray[i][j] = Color.LIGHT_GRAY;
  				getMinefield()[i][j] = ' ';
 				MyMouseAdapter.f = 1;
+				unrevealed = 81;
 				repaint();
 			}
 		}
