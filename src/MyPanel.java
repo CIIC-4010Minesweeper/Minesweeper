@@ -1,8 +1,12 @@
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Insets;
+import java.net.URL;
 import java.util.Random;
-
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class MyPanel extends JPanel {
@@ -16,6 +20,7 @@ public class MyPanel extends JPanel {
 	public int y = -1;
 	public int mouseDownGridX = 0;
 	public int mouseDownGridY = 0;
+	private ImageIcon icon;
 	private static char minefield[][];
 	public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
 	public MyPanel() {   //This is the constructor... this code runs first to initialize
@@ -39,17 +44,19 @@ public class MyPanel extends JPanel {
 				colorArray[x][y] = Color.LIGHT_GRAY;
 			}
 		}
-		minefield = new char [TOTAL_COLUMNS][TOTAL_ROWS];
+		setMinefield(new char [TOTAL_COLUMNS][TOTAL_ROWS]);
 	}
 	
 	Random rando = new Random();
 	public static int mines = 10;
 	public int flags = 10;
 	public static int flagged = 0;
+	public int [][] block = new int [TOTAL_COLUMNS][TOTAL_ROWS];
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
+		
 		//Compute interior coordinates
 		Insets myInsets = getInsets();
 		int x1 = myInsets.left;
@@ -83,6 +90,19 @@ public class MyPanel extends JPanel {
 				}
 			}
 		}
+		
+		Font f = new Font("Dialog", Font.PLAIN, 12); // choose a font for the numbers
+		g.setFont(f);
+
+		// Draw cell numbers
+		for (int x = 0; x < TOTAL_COLUMNS; x++) {
+		    for (int y = 0; y < TOTAL_ROWS; y++) {
+		        if (colorArray[x][y] == Color.WHITE) {
+		            int around = minesAround(x, y);
+		            g.drawString(String.valueOf(around),x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y+(y*(INNER_CELL_SIZE+1)+20));
+		        }
+		    }
+		}
 	}
 	
 	// Places the mines in the field
@@ -91,8 +111,8 @@ public class MyPanel extends JPanel {
 		while (minesPlaced <= mines) {
 			int x = rando.nextInt(TOTAL_COLUMNS);
 			int y = rando.nextInt(TOTAL_ROWS-1);
-			if (minefield[x][y] != '*') {
-				minefield[x][y] = '*';
+			if (getMinefield()[x][y] != '*') {
+				getMinefield()[x][y] = '*';
 				minesPlaced++;
 			}
 		}
@@ -100,25 +120,38 @@ public class MyPanel extends JPanel {
 			for (int j=0; j<9; j++) {
 				bombCheck(i, j);
 				if (bombCheck(i, j) == 1) {
-					System.out.println(i + "," + j);
+					System.out.println(i + "," + j); // for debugging purposes
 				}
 			}
 		}repaint();
 	}
 	
+	//checks a tile, white if there were no mines
 	public void check (int x, int y) {
-		colorArray[x][y] = Color.WHITE ;
+		if (bombCheck(x,y) != 1) {
+			colorArray[x][y] = Color.WHITE ;
 		repaint();
+		}
+		else {
+			for (int i=0; i<9; i++) {
+				for (int j=0; j<9; j++) {
+					bombCheck(i, j);
+					if (bombCheck(i, j) == 1) {
+						colorArray[i][j] = Color.BLACK;
+					}
+				}
+			}
+		}
 	}
 	
 	// Checks whether this place in the field has a bomb (1) or not (0).
 	public int bombCheck(int x, int y) {
 		if (!(x == -1 || y == -1)) {
-			if (minefield[x][y] == '*') {
+			if (getMinefield()[x][y] == '*') {
 				return 1;
 			}
 			else {
-				minefield[x][y] = 'c';
+				getMinefield()[x][y] = 'c';
 				return 0;
 			}
 		}
@@ -127,6 +160,7 @@ public class MyPanel extends JPanel {
 		}
 	}
 	
+
 	// Checks for mines on the 8 other tiles around the target location and returns the number of mines there are. 
 	public int minesAround(int x, int y) {
 		int mines = 0;
@@ -135,9 +169,12 @@ public class MyPanel extends JPanel {
 		mines += bombCheck(x-1, y+1);
 		mines += bombCheck(x, y-1);
 		mines += bombCheck(x, y+1);
-		mines += bombCheck(x+1, y-1);
-		mines += bombCheck(x+1, y);
-		mines += bombCheck(x+1, y+1);
+		if (x < TOTAL_COLUMNS - 2) {
+			mines += bombCheck(x+1, y-1);
+			mines += bombCheck(x+1, y);
+			mines += bombCheck(x+1, y+1);
+		}
+		
 		if (mines > 0) {
 			return mines;
 		}
@@ -145,7 +182,9 @@ public class MyPanel extends JPanel {
 			return 0;
 		}
 	}
-		
+	
+
+	//Recursive method
 	public void checkAround(int x, int y) {
 		int minx, miny, maxx, maxy;
 		check(x,y);
@@ -165,6 +204,7 @@ public class MyPanel extends JPanel {
 			}
 		}
 	
+	//Flag
 	public int checkflag(int x, int y){
 		int status = 0;
 		if (!(x == -1 || y == -1)) {
@@ -177,11 +217,12 @@ public class MyPanel extends JPanel {
 		return status;
 	}
 	
+	//Resets field
 	public void reset() {
 		for (int i = 0; i < TOTAL_COLUMNS; i++) {
 			for (int j = 0 ;j < TOTAL_ROWS; j++) {
 				colorArray[i][j] = Color.LIGHT_GRAY;
- 				minefield[i][j] = ' ';
+ 				getMinefield()[i][j] = ' ';
 				MyMouseAdapter.f = 1;
 				repaint();
 			}
@@ -239,5 +280,13 @@ public class MyPanel extends JPanel {
 			return -1;
 		}
 		return y;
+	}
+
+	public static char[][] getMinefield() {
+		return minefield;
+	}
+
+	public static void setMinefield(char minefield[][]) {
+		MyPanel.minefield = minefield;
 	}
 }

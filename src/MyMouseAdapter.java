@@ -103,9 +103,8 @@ public class MyMouseAdapter extends MouseAdapter {
 	 								myPanel.checkAround(gridX, gridY);
 	 							}
 	 							else{
-	 								myPanel.colorArray[gridX][gridY] = Color.BLACK ;
-	 								System.out.println("You've Lost!");
-	 								myPanel.reset();
+	 								myPanel.check(gridX, gridY);
+	 								System.out.println("BOOM! You've lost... Try again!");
 	 								myPanel.repaint();
 	 							}
  							}
@@ -152,7 +151,7 @@ public class MyMouseAdapter extends MouseAdapter {
 									if (myPanel1.bombCheck(gridX1, gridY1) == 1) {
 										MyPanel.flagged ++;
 										if (MyPanel.flagged == 10) {
-											System.out.println("You've Won! Congratulations!");
+											System.out.println("You've won! Congratulations!");
 											myPanel1.reset();
 											myPanel1.colorArray[gridX1][gridY1] = Color.LIGHT_GRAY ;
 											myPanel1.repaint();
