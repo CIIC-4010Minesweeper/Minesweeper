@@ -145,7 +145,7 @@ public class MyMouseAdapter extends MouseAdapter {
 				} else {
 					if ((myPanel1.mouseDownGridX != gridX1) || (myPanel1.mouseDownGridY != gridY1)) {
 					}else{
-						if (!(myPanel1.colorArray[gridX1][gridY1] == Color.WHITE)) {
+						if (!(myPanel1.colorArray[gridX1][gridY1] == Color.LIGHT_GRAY)) {
 							if (myPanel1.checkflag(gridX1, gridY1) == 0) {
 								if (!(f > flags)) {
 									if (myPanel1.bombCheck(gridX1, gridY1) == 1) {
@@ -157,7 +157,7 @@ public class MyMouseAdapter extends MouseAdapter {
 								}
 							}
 							else {
-								myPanel1.colorArray[gridX1][gridY1] = Color.LIGHT_GRAY ;
+								myPanel1.colorArray[gridX1][gridY1] = Color.WHITE ;
 								myPanel1.repaint();
 								f --;
 							}

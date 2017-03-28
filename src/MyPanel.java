@@ -33,14 +33,14 @@ public class MyPanel extends JPanel {
 			throw new RuntimeException("TOTAL_ROWS must be at least 3!");
 		}
 		for (int x = 0; x < TOTAL_COLUMNS; x++) {   //Top row
-			colorArray[x][0] = Color.LIGHT_GRAY;
+			colorArray[x][0] = Color.WHITE;
 		}
 		for (int y = 0; y < TOTAL_ROWS; y++) {   //Left column
-			colorArray[0][y] = Color.LIGHT_GRAY;
+			colorArray[0][y] = Color.WHITE;
 		}
 		for (int x = 1; x < TOTAL_COLUMNS; x++) {   //The rest of the grid
 			for (int y = 1; y < TOTAL_ROWS; y++) {
-				colorArray[x][y] = Color.LIGHT_GRAY;
+				colorArray[x][y] = Color.WHITE;
 			}
 		}
 		setMinefield(new char [TOTAL_COLUMNS][TOTAL_ROWS]);
@@ -67,7 +67,7 @@ public class MyPanel extends JPanel {
 		int height = y2 - y1;
 
 		//Paint the background
-		g.setColor(Color.LIGHT_GRAY);
+		g.setColor(Color.WHITE);
 		g.fillRect(x1, y1, width + 1, height + 1);
 
 		//Draw the grid minus the bottom row (which has only one cell)
@@ -102,9 +102,11 @@ public class MyPanel extends JPanel {
 		// Draw cell numbers
 		for (int x = 0; x < TOTAL_COLUMNS; x++) {
 		    for (int y = 0; y < TOTAL_ROWS; y++) {
-		        if (colorArray[x][y] == Color.WHITE) {
+		        if (colorArray[x][y] == Color.LIGHT_GRAY) {
 		            int around = minesAround(x, y);
-		            g.drawString(String.valueOf(around),x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y+(y*(INNER_CELL_SIZE+1)+20));
+		            if (around != 0) {
+		            	g.drawString(String.valueOf(around),x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y+(y*(INNER_CELL_SIZE+1)+20));
+		            }
 		        }
 		    }
 		}
@@ -126,7 +128,7 @@ public class MyPanel extends JPanel {
 	//checks a tile, white if there were no mines
 	public void check (int x, int y) {
 		if (bombCheck(x,y) != 1) {
-			if (colorArray[x][y] != Color.WHITE) {
+			if (colorArray[x][y] != Color.LIGHT_GRAY) {
 				unrevealed--;
 				if (unrevealed == 0) {
 	    			System.out.println("You've won! Congratulations!");
@@ -139,7 +141,7 @@ public class MyPanel extends JPanel {
 					}
 				}
 			}
-			colorArray[x][y] = Color.WHITE ;
+			colorArray[x][y] = Color.LIGHT_GRAY ;
 			
 		repaint();
 		}
@@ -180,7 +182,7 @@ public class MyPanel extends JPanel {
 		mines += bombCheck(x-1, y+1);
 		mines += bombCheck(x, y-1);
 		mines += bombCheck(x, y+1);
-		if (x < TOTAL_COLUMNS - 2) {
+		if (x < TOTAL_COLUMNS - 1) {
 			mines += bombCheck(x+1, y-1);
 			mines += bombCheck(x+1, y);
 			mines += bombCheck(x+1, y+1);
@@ -205,7 +207,7 @@ public class MyPanel extends JPanel {
 		maxy = (y >= TOTAL_ROWS - 2 ? TOTAL_ROWS - 2 : y + 1);
 		for (int i = minx; i < maxx; i ++) {
 			for (int j = miny; j <= maxy; j ++) {
-					if (bombCheck(i,j) == 0 && colorArray[i][j] != Color.WHITE) {
+					if (bombCheck(i,j) == 0 && colorArray[i][j] != Color.LIGHT_GRAY) {
 						check(i,j);
 						if (minesAround(i,j) == 0) {
 							checkAround(i,j);
@@ -232,7 +234,7 @@ public class MyPanel extends JPanel {
 	public void reset() {
 		for (int i = 0; i < TOTAL_COLUMNS; i++) {
 			for (int j = 0 ;j < TOTAL_ROWS; j++) {
-				colorArray[i][j] = Color.LIGHT_GRAY;
+				colorArray[i][j] = Color.WHITE;
  				getMinefield()[i][j] = ' ';
 				MyMouseAdapter.f = 1;
 				unrevealed = 71;
