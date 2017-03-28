@@ -47,7 +47,7 @@ public class MyPanel extends JPanel {
 	}
 	
 	Random rando = new Random();
-	public int unrevealed = 81;
+	public int unrevealed = 71;
 	public static int mines = 10;
 	public int flags = 10;
 	public static int flagged = 0;
@@ -120,21 +120,27 @@ public class MyPanel extends JPanel {
 				getMinefield()[x][y] = '*';
 				minesPlaced++;
 			}
-		}
-		for (int i=0; i<9; i++) {
-			for (int j=0; j<9; j++) {
-				bombCheck(i, j);
-				if (bombCheck(i, j) == 1) {
-					System.out.println(i + "," + j); // for debugging purposes
-				}
-			}
 		}repaint();
 	}
 	
 	//checks a tile, white if there were no mines
 	public void check (int x, int y) {
 		if (bombCheck(x,y) != 1) {
+			if (colorArray[x][y] != Color.WHITE) {
+				unrevealed--;
+				if (unrevealed == 0) {
+	    			System.out.println("You've won! Congratulations!");
+					for (int i = 0; i<9; i++){
+	    				for (int j = 0; j<9; j++) {
+	    					if (bombCheck(i, j) == 1) {
+	    						colorArray[i][j] = Color.BLACK;
+	    					}
+	    				}
+					}
+				}
+			}
 			colorArray[x][y] = Color.WHITE ;
+			
 		repaint();
 		}
 		else {
@@ -229,7 +235,7 @@ public class MyPanel extends JPanel {
 				colorArray[i][j] = Color.LIGHT_GRAY;
  				getMinefield()[i][j] = ' ';
 				MyMouseAdapter.f = 1;
-				unrevealed = 81;
+				unrevealed = 71;
 				repaint();
 			}
 		}

@@ -107,7 +107,7 @@ public class MyMouseAdapter extends MouseAdapter {
 	 								System.out.println("BOOM! You've lost... Try again!");
 	 								myPanel.repaint();
 	 							}
- 							}
+				    		}
 						}
 					}
 				}
@@ -150,12 +150,6 @@ public class MyMouseAdapter extends MouseAdapter {
 								if (!(f > flags)) {
 									if (myPanel1.bombCheck(gridX1, gridY1) == 1) {
 										MyPanel.flagged ++;
-										if (MyPanel.flagged == 10) {
-											System.out.println("You've won! Congratulations!");
-											myPanel1.reset();
-											myPanel1.colorArray[gridX1][gridY1] = Color.LIGHT_GRAY ;
-											myPanel1.repaint();
-										}
 									}
 									myPanel1.colorArray[gridX1][gridY1] = Color.RED ;
 									myPanel1.repaint();
